@@ -1,0 +1,56 @@
+package page
+
+import "go-todo-app/shared"
+import "fmt"
+
+templ taskTable(taskItems []TaskItem) {
+	<table>
+		<thead>
+			<tr>
+				<th>Tasks</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody hx-target="closest tr" hx-swap="outerHTML">
+			for _, t := range taskItems {
+				@Row(t)
+			}
+			@NewTaskButton()
+		</tbody>
+	</table>
+}
+
+templ Row(t TaskItem) {
+	<tr>
+		<td>{ t.Task  }</td>
+		<td><button hx-get={ fmt.Sprintf("/page/edit/%d", t.Id) }>Edit</button> <button type="button" hx-confirm="Are you Sure?" hx-delete={ fmt.Sprintf("/page/taskItem/%d", t.Id) }>Delete</button></td>
+	</tr>
+}
+
+templ Form(t TaskItem) {
+	<tr hx-trigger="cancel" hx-get={ fmt.Sprintf("/page/taskItem/%d", t.Id) }>
+		<td><input name="task" value={ t.Task } hx-trigger="keyup[keyCode==13]" hx-put={ fmt.Sprintf("/page/taskItem/%d", t.Id) } hx-include="closest tr"/></td>
+		<td><button type="button" hx-get={ fmt.Sprintf("page/taskItem/%d", t.Id) }>Cancel</button><button type="button" hx-put={ fmt.Sprintf("/page/taskItem/%d", t.Id) } hx-include="closest tr">Save</button> </td>
+	</tr>
+}
+
+templ NewTaskButton() {
+	<tr>
+		<td><button type="button" hx-get="/page/newTaskItem/form">Add Task</button></td>
+		<td></td>
+	</tr>
+}
+
+templ NewTaskForm() {
+	<tr hx-trigger="cancel">
+		<td><input name="newTask" value="" hx-trigger="keyup[keyCode==13]" hx-post="/page/newTaskItem/attemptAdd" hx-include="closest tr"/></td>
+		<td><button type="button" hx-get="/page/newTaskItem/attemptAdd">Cancel</button><button type="button" hx-post="/page/newTaskItem/attemptAdd" hx-include="closest tr">Save</button></td>
+	</tr>
+}
+
+templ Index(taskItems []TaskItem) {
+	@shared.Layout() {
+		<h2>todo-app</h2>
+		@taskTable(taskItems)
+	}
+}
