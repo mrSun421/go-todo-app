@@ -23,7 +23,7 @@ func Layout() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<html><head><title>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html><head><title>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -41,7 +41,58 @@ func Layout() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</script></head><body><div id=\"content\" class=\"container p-5 content\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</script><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link href=\"https://fonts.googleapis.com/css2?family=Shantell+Sans:wght@300&amp;display=swap\" rel=\"stylesheet\"><style type=\"text/css\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Var4 := `
+			body {
+				font-family: 'Shantell Sans', cursive;
+			}
+			.header {
+				color: #000000;
+				text-align: center;
+				font-size: 48px;
+			}
+			table {
+				width: 50$;
+				font-size: 16px;
+			}
+			table.center {
+				margin-left:auto;
+				margin-right:auto;
+			}
+			th#tasksText {
+				border-bottom: 1px solid #000000;
+				font-size: 24px;
+			}
+
+
+			button {
+				background-color: #95bcf5;
+				border: none;
+				color: #000000;
+				text-align: center;
+				text-decoration: none;
+				display: inline-block;
+				border-radius: 4px;
+				font-size: 12px;
+			}
+			button#delete {
+				background-color: #B80000;
+				color: #EAEAEA;
+			}
+			button#save {
+				background-color: #00EE60;
+				color: #1A1A1A;
+			}
+
+			`
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</style></head><body><div id=\"content\" class=\"container p-5 content\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
