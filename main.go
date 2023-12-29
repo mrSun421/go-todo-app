@@ -21,6 +21,9 @@ func main() {
 		log.Fatal(err)
 	}
 	port := os.Getenv("PORT")
+	if port == "" {
+		port = ":8080"
+	}
 
 	server := &http.Server{Addr: port}
 	connStr := os.Getenv("CONNSTR")
@@ -43,7 +46,10 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		page.Index(taskItems).Render(r.Context(), w)
+		err = page.Index(taskItems).Render(r.Context(), w)
+		if err != nil {
+			log.Fatal(err)
+		}
 		log.Printf("Index Page Loaded\n")
 	})
 
@@ -67,7 +73,10 @@ func main() {
 			log.Fatal(err)
 		}
 
-		page.Form(taskItems[0]).Render(r.Context(), w)
+		err = page.Form(taskItems[0]).Render(r.Context(), w)
+		if err != nil {
+			log.Fatal(err)
+		}
 		log.Printf("Task successfully obtained to be edited\n")
 	})
 
@@ -92,7 +101,10 @@ func main() {
 				log.Fatal(err)
 			}
 
-			page.Row(taskItems[0]).Render(r.Context(), w)
+			err = page.Row(taskItems[0]).Render(r.Context(), w)
+			if err != nil {
+				log.Fatal(err)
+			}
 			log.Printf("Task successfully got\n")
 			return
 		}
@@ -107,7 +119,10 @@ func main() {
 			if commandTag.RowsAffected() != 1 {
 				log.Printf("No Rows Affected")
 			}
-			page.Row(page.TaskItem{Id: id, Task: task}).Render(r.Context(), w)
+			err = page.Row(page.TaskItem{Id: id, Task: task}).Render(r.Context(), w)
+			if err != nil {
+				log.Fatal(err)
+			}
 			log.Printf("Task successfully updated\n")
 			return
 		}
@@ -126,7 +141,10 @@ func main() {
 	})
 	http.HandleFunc("/page/newTaskItem/form", func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("getting new task form\n")
-		page.NewTaskForm().Render(r.Context(), w)
+		err = page.NewTaskForm().Render(r.Context(), w)
+		if err != nil {
+			log.Fatal(err)
+		}
 		log.Printf("successfully obtained form for new task\n")
 	})
 	http.HandleFunc("/page/newTaskItem/attemptAdd", func(w http.ResponseWriter, r *http.Request) {
@@ -163,9 +181,8 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	err = server.Shutdown(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
+	log.Printf("%v\n", err)
+	os.Exit(0)
 }
 
 func addTasks(conn *pgx.Conn, tasks []string) {
